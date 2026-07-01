@@ -12,10 +12,8 @@
   Do not add data fetching, scripts, or route logic here.
 */
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
-
-/* Per-task display + body typefaces (consumed via task-themes.ts). */
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&family=Syne:wght@500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&family=Syne:wght@500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@400;500;600;700&display=swap');
 
 body {
@@ -25,22 +23,53 @@ body {
 }
 
 .editable-site-root {
-  /* Yelp-style clean sans, used for both display and body. */
-  --editable-font-display: 'Inter', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
-  --editable-font-body: 'Inter', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
-  /* Premium easing curve used across every hover + transition. */
+  --editable-font-display: 'Fraunces', Georgia, serif;
+  --editable-font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
   --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
   font-family: var(--editable-font-body);
 }
 
-/*
-  Site-wide premium motion.
+.editable-site-root::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.88), rgba(255,255,255,0.94)),
+    radial-gradient(circle at top center, rgba(141,216,255,0.28), transparent 38%);
+  pointer-events: none;
+}
 
-  1. Unify the easing of every existing transition/hover to one refined curve.
-  2. Add a smooth "post open" entry animation that replays on each navigation
-     (driven by EditablePageMotion remounting the content per route).
-  Durations stay defined per-component via Tailwind utilities.
-*/
+.editable-site-root::after {
+  content: '';
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 140px;
+  z-index: -1;
+  opacity: 0.5;
+  background:
+    linear-gradient(to top, rgba(84, 9, 218, 0.06), transparent 70%),
+    repeating-linear-gradient(
+      90deg,
+      rgba(78, 113, 255, 0.18) 0 18px,
+      transparent 18px 26px,
+      rgba(78, 113, 255, 0.12) 26px 42px,
+      transparent 42px 54px
+    );
+  clip-path: polygon(
+    0% 100%, 0% 46%, 2% 46%, 2% 67%, 4% 67%, 4% 38%, 7% 38%, 7% 73%, 9% 73%, 9% 51%,
+    12% 51%, 12% 22%, 15% 22%, 15% 69%, 17% 69%, 17% 44%, 20% 44%, 20% 79%, 23% 79%, 23% 33%,
+    26% 33%, 26% 62%, 29% 62%, 29% 40%, 32% 40%, 32% 86%, 35% 86%, 35% 28%, 39% 28%, 39% 74%,
+    42% 74%, 42% 48%, 45% 48%, 45% 66%, 49% 66%, 49% 31%, 52% 31%, 52% 83%, 55% 83%, 55% 39%,
+    58% 39%, 58% 58%, 61% 58%, 61% 21%, 65% 21%, 65% 78%, 68% 78%, 68% 43%, 71% 43%, 71% 71%,
+    75% 71%, 75% 36%, 79% 36%, 79% 64%, 83% 64%, 83% 25%, 87% 25%, 87% 81%, 91% 81%, 91% 46%,
+    95% 46%, 95% 69%, 100% 69%, 100% 100%
+  );
+  pointer-events: none;
+}
+
 .editable-site-root *,
 .editable-site-root *::before,
 .editable-site-root *::after {
@@ -58,8 +87,6 @@ body {
   }
 }
 
-/* The content region rises + fades on open; `backwards` clears the transform
-   afterwards so sticky sidebars keep working. */
 .editable-enter > * {
   animation: editable-enter 0.6s var(--ease-premium) backwards;
   will-change: transform, opacity;
@@ -69,6 +96,7 @@ body {
   .editable-enter > * {
     animation: none;
   }
+
   .editable-site-root *,
   .editable-site-root *::before,
   .editable-site-root *::after {
@@ -120,4 +148,22 @@ body {
 
 .article-content a {
   color: var(--slot4-accent-fill);
+}
+
+.article-content p + p {
+  margin-top: 1rem;
+}
+
+.article-content h2,
+.article-content h3 {
+  font-family: var(--editable-font-display);
+  letter-spacing: -0.03em;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.article-content ul,
+.article-content ol {
+  margin-top: 1rem;
+  padding-left: 1.25rem;
 }
