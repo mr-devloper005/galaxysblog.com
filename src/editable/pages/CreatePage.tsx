@@ -21,6 +21,7 @@ type DraftPost = {
 }
 
 const STORE_KEY = 'slot4:created-posts'
+const hiddenTaskKeys = new Set<TaskKey>(['classified', 'profile'])
 
 const taskIcon: Record<string, typeof FileText> = {
   article: FileText,
@@ -46,7 +47,7 @@ const saveDraft = (draft: DraftPost) => {
 
 export default function CreatePage() {
   const { session } = useEditableLocalAuthSession()
-  const enabledTasks = useMemo(() => SITE_CONFIG.tasks.filter((task) => task.enabled), [])
+  const enabledTasks = useMemo(() => SITE_CONFIG.tasks.filter((task) => task.enabled && !hiddenTaskKeys.has(task.key)), [])
   const [task, setTask] = useState<TaskKey>((enabledTasks[0]?.key || 'article') as TaskKey)
   const [title, setTitle] = useState('')
   const [category, setCategory] = useState('')
